@@ -7,58 +7,89 @@
         body { background-color: #050505; color: #ff0000; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         
         .container { border: 1px solid #ff0000; padding: 2rem; width: 350px; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 10px #ff0000; }
-        input { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px; width: 90%; margin-bottom: 10px; }
-        button { background: #ff0000; color: #000; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; }
+        input { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px; width: 90%; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        button { background: #ff0000; color: #000; border: none; padding: 10px; width: 95%; cursor: pointer; font-weight: bold; margin-top: 10px; }
         
-        #log-container { margin-top: 20px; font-size: 0.8rem; height: 150px; overflow-y: hidden; border-top: 1px solid #ff0000; padding-top: 10px; color: #888; }
+        /* Progress Bar */
+        #progress-wrapper { width: 100%; border: 1px solid #ff0000; height: 20px; margin-top: 20px; display: none; }
+        #progress-bar { width: 0%; height: 100%; background: #ff0000; }
+
+        #log-container { margin-top: 20px; font-size: 0.8rem; height: 150px; overflow-y: hidden; border-top: 1px solid #ff0000; padding-top: 10px; color: #888; text-align: left; }
         .log-entry { margin-bottom: 5px; }
+
+        /* Glitch Efekti */
+        @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
+        .glitch-active { animation: glitch 0.2s infinite; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2 style="text-align: center;">ROOT ACCESS</h2>
+        <h2 style="text-align: center;">SYSTEM AUTH</h2>
         <input type="text" id="user" placeholder="Kullanıcı Adı">
         <input type="password" id="pass" placeholder="Şifre">
         <button onclick="startHack()">GİRİŞ YAP</button>
         
-        <div id="log-container">
-            <div id="logs"></div>
-        </div>
+        <div id="progress-wrapper"><div id="progress-bar"></div></div>
+        <div id="log-container"><div id="logs"></div></div>
     </div>
 
     <script>
-        function addLog(message) {
+        function addLog(message, callback) {
             const logs = document.getElementById('logs');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
-            entry.innerText = "> " + message;
             logs.appendChild(entry);
+            
+            let charIndex = 0;
+            const typing = setInterval(() => {
+                if (charIndex < message.length) {
+                    entry.innerText += message.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(typing);
+                    if (callback) callback();
+                }
+            }, 30);
         }
 
         function startHack() {
             const logs = document.getElementById('logs');
-            logs.innerHTML = ""; // Logları temizle
+            const pWrapper = document.getElementById('progress-wrapper');
+            const pBar = document.getElementById('progress-bar');
             
+            logs.innerHTML = ""; 
+            pWrapper.style.display = "block";
+            document.body.classList.add('glitch-active');
+            
+            let progress = 0;
+            const pInterval = setInterval(() => {
+                progress += 10;
+                pBar.style.width = progress + "%";
+                if (progress >= 100) clearInterval(pInterval);
+            }, 500);
+
             const sequence = [
-                "Yetkilendirme başlatılıyor...",
-                "Güvenlik duvarı taranıyor...",
-                "Port 80/443 açık...",
-                "Veritabanı bağlantısı kuruldu...",
-                "Kullanıcı adı doğrulanıyor...",
+                "Erişim denemesi: root...",
+                "Güvenlik protokolü bypass...",
+                "Veri akışı şifreleniyor...",
+                "İzinler kontrol ediliyor...",
                 "HATA: Erişim reddedildi.",
-                "Sistem kilitlendi. IP engellendi!"
+                "Sistem kilitlendi."
             ];
 
             let i = 0;
-            const interval = setInterval(() => {
+            function runSequence() {
                 if (i < sequence.length) {
-                    addLog(sequence[i]);
-                    i++;
+                    addLog("> " + sequence[i], () => {
+                        i++;
+                        setTimeout(runSequence, 300);
+                    });
                 } else {
-                    clearInterval(interval);
+                    setTimeout(() => document.body.classList.remove('glitch-active'), 500);
                 }
-            }, 600);
+            }
+            runSequence();
         }
     </script>
 </body>
