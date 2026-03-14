@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Erişimi | Terminal</title>
+    <style>
+        body { background-color: #050505; color: #ff0000; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        
+        .container { border: 1px solid #ff0000; padding: 2rem; width: 350px; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 10px #ff0000; }
+        input { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px; width: 90%; margin-bottom: 10px; }
+        button { background: #ff0000; color: #000; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; }
+        
+        #log-container { margin-top: 20px; font-size: 0.8rem; height: 150px; overflow-y: hidden; border-top: 1px solid #ff0000; padding-top: 10px; color: #888; }
+        .log-entry { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 style="text-align: center;">ROOT ACCESS</h2>
+        <input type="text" id="user" placeholder="Kullanıcı Adı">
+        <input type="password" id="pass" placeholder="Şifre">
+        <button onclick="startHack()">GİRİŞ YAP</button>
+        
+        <div id="log-container">
+            <div id="logs"></div>
+        </div>
+    </div>
+
+    <script>
+        function addLog(message) {
+            const logs = document.getElementById('logs');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerText = "> " + message;
+            logs.appendChild(entry);
+        }
+
+        function startHack() {
+            const logs = document.getElementById('logs');
+            logs.innerHTML = ""; // Logları temizle
+            
+            const sequence = [
+                "Yetkilendirme başlatılıyor...",
+                "Güvenlik duvarı taranıyor...",
+                "Port 80/443 açık...",
+                "Veritabanı bağlantısı kuruldu...",
+                "Kullanıcı adı doğrulanıyor...",
+                "HATA: Erişim reddedildi.",
+                "Sistem kilitlendi. IP engellendi!"
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < sequence.length) {
+                    addLog(sequence[i]);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 600);
+        }
+    </script>
+</body>
+</html>
