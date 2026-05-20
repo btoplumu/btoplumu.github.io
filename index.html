@@ -2,96 +2,89 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Sistem Erişimi | Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dengb0 | Professional Dev Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #ff0000; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { border: 1px solid #ff0000; padding: 2rem; width: 350px; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 10px #ff0000; }
-        input { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px; width: 90%; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
-        button { background: #ff0000; color: #000; border: none; padding: 10px; width: 95%; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        
-        /* Progress Bar */
-        #progress-wrapper { width: 100%; border: 1px solid #ff0000; height: 20px; margin-top: 20px; display: none; }
-        #progress-bar { width: 0%; height: 100%; background: #ff0000; }
-
-        #log-container { margin-top: 20px; font-size: 0.8rem; height: 150px; overflow-y: hidden; border-top: 1px solid #ff0000; padding-top: 10px; color: #888; text-align: left; }
-        .log-entry { margin-bottom: 5px; }
-
-        /* Glitch Efekti */
-        @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
-        .glitch-active { animation: glitch 0.2s infinite; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: #0A0E27; color: #E0E6FF; overflow-x: hidden; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 20% 50%, rgba(100, 255, 218, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(147, 112, 219, 0.08) 0%, transparent 50%); pointer-events: none; z-index: -1; }
+        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 2px; }
+        a { text-decoration: none; color: inherit; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5vw; background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(17, 34, 64, 0.5)); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(100, 255, 218, 0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg, #64FFDA, #00D9FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 3px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 40px; align-items: center; }
+        .nav-link { color: #E0E6FF; font-size: 0.95rem; transition: all 0.3s ease; }
+        .nav-link:hover { color: #64FFDA; }
+        .btn-discord { padding: 10px 24px; background: linear-gradient(135deg, #64FFDA, #00D9FF); color: #0A0E27; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .hero { padding: 180px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 2px solid rgba(100, 255, 218, 0.15); }
+        .hero h1 { font-size: clamp(3rem, 8vw, 6rem); background: linear-gradient(135deg, #64FFDA, #00D9FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
+        .hero p { font-size: 1.25rem; color: #B8BDDC; max-width: 700px; margin: 0 auto 50px; line-height: 1.8; }
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; }
+        .btn-primary { padding: 16px 48px; background: linear-gradient(135deg, #64FFDA, #00D9FF); color: #0A0E27; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .btn-secondary { padding: 16px 48px; border: 2px solid #64FFDA; background: transparent; color: #64FFDA; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .section { padding: 120px 20px; max-width: 1400px; margin: 0 auto; }
+        .section h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 80px; text-align: center; }
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .card { background: linear-gradient(135deg, rgba(17, 34, 64, 0.8), rgba(20, 42, 80, 0.5)); border: 1px solid rgba(100, 255, 218, 0.2); border-radius: 12px; padding: 50px 30px; transition: 0.4s; }
+        .card:hover { transform: translateY(-15px); border-color: rgba(100, 255, 218, 0.5); }
+        .card h3 { color: #64FFDA; margin-bottom: 15px; text-transform: uppercase; }
+        .card p { color: #B8BDDC; line-height: 1.8; }
+        .stats-container { display: flex; justify-content: center; margin-top: 80px; padding-top: 80px; border-top: 2px solid rgba(100, 255, 218, 0.1); }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2.5rem; color: #64FFDA; font-weight: 900; }
+        .stat-label { color: #B8BDDC; text-transform: uppercase; letter-spacing: 2px; }
+        footer { padding: 60px 20px; text-align: center; border-top: 1px solid rgba(100, 255, 218, 0.1); margin-top: 100px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2 style="text-align: center;">SYSTEM AUTH</h2>
-        <input type="text" id="user" placeholder="Kullanıcı Adı">
-        <input type="password" id="pass" placeholder="Şifre">
-        <button onclick="startHack()">GİRİŞ YAP</button>
-        
-        <div id="progress-wrapper"><div id="progress-bar"></div></div>
-        <div id="log-container"><div id="logs"></div></div>
+    <nav>
+        <div class="logo">dengb0</div>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Hizmetler</a>
+            <a href="#community" class="nav-link">Komunite</a>
+            <button onclick="window.open('https://discord.gg/4wqAZ3M67z', '_blank')" class="btn-discord">Discord'a Katıl</button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>DENGB0</h1>
+        <p>Roblox geliştirmesinde yeni bir soluk. Özellikle Ta ve Btf benzeri oyunlar için yüksek kaliteli model ve map tasarımlarıyla profesyonel çözümler sunuyoruz.</p>
+        <div class="hero-buttons">
+            <button onclick="window.open('https://discord.gg/4wqAZ3M67z', '_blank')" class="btn-primary">Projelerimizi İncele</button>
+            <button class="btn-secondary">Daha Fazla Bilgi</button>
+        </div>
     </div>
 
-    <script>
-        function addLog(message, callback) {
-            const logs = document.getElementById('logs');
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            logs.appendChild(entry);
-            
-            let charIndex = 0;
-            const typing = setInterval(() => {
-                if (charIndex < message.length) {
-                    entry.innerText += message.charAt(charIndex);
-                    charIndex++;
-                } else {
-                    clearInterval(typing);
-                    if (callback) callback();
-                }
-            }, 30);
-        }
+    <section id="features" class="section">
+        <h2>Neler Sunuyoruz?</h2>
+        <div class="card-container">
+            <div class="card">
+                <h3>Model & Map Tasarımı</h3>
+                <p>Ta, Btf ve diğer popüler oyun modları için optimize edilmiş, oyunun atmosferine uygun özel model ve harita tasarımları.</p>
+            </div>
+            <div class="card">
+                <h3>PC & Mobil Optimizasyon</h3>
+                <p>Donma sorunu yaşamadan, her cihazda akıcı bir deneyim sunan profesyonel oyun içi varlıklar ve araçlar.</p>
+            </div>
+            <div class="card">
+                <h3>Hızlı Teslimat</h3>
+                <p>İhtiyaçlarınıza özel hazırlanan tasarımlarla projelerinizi hızla hayata geçirin.</p>
+            </div>
+        </div>
 
-        function startHack() {
-            const user = document.getElementById('user').value;
-            const logs = document.getElementById('logs');
-            const pWrapper = document.getElementById('progress-wrapper');
-            const pBar = document.getElementById('progress-bar');
-            
-            if (!user) { alert("Kullanıcı adı gerekli!"); return; }
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Destek</div>
+            </div>
+        </div>
+    </section>
 
-            logs.innerHTML = ""; 
-            pWrapper.style.display = "block";
-            document.body.classList.add('glitch-active');
-            
-            let progress = 0;
-            const pInterval = setInterval(() => {
-                progress += 5;
-                pBar.style.width = progress + "%";
-                if (progress >= 100) clearInterval(pInterval);
-            }, 250);
+    <footer>
+        <p>© 2026 dengb0 - Geliştirici Kaynak Merkezi</p>
+    </footer>
 
-            // Kullanıcı root ise farklı loglar göster
-            const sequence = (user === "root") 
-                ? ["Root yetkisi algılandı...", "Sistem dizinleri açılıyor...", "Tüm yetkiler tanımlandı..."]
-                : ["Kimlik doğrulanıyor...", "Veri paketleri ayrıştırılıyor...", "Güvenlik katmanı geçildi..."];
-
-            let i = 0;
-            function runSequence() {
-                if (i < sequence.length) {
-                    addLog("> " + sequence[i], () => {
-                        i++;
-                        setTimeout(runSequence, 600);
-                    });
-                } else {
-                    // Yönlendirme
-                    setTimeout(() => {
-                        window.location.href = "anasayfa.html";
-                    }, 1000);
-                }
-            }
-            runSequence();
-        }
-    </script>
 </body>
 </html>
